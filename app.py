@@ -121,8 +121,8 @@ SEMESTRE     = "4º Semestre – 2026.1"
 CURSO        = "Direito – UNIFTC"
 
 INTEGRANTES = [
-    "Solene Silva dos Santos",
-    "Hellen Victoria Dumont dos Santos",
+    "👑 Solene Silva dos Santos (Líder)",
+    "⭐ Hellen Victoria Dumont dos Santos (Vice-líder)",
     "Jeovana Isabela Cunha Reis",
     "Lavínia Caroline Goes Santos de Jesus",
     "Abraão Mendes Pinheiro",
