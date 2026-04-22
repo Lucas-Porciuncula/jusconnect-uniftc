@@ -114,7 +114,7 @@ PRIORIDADE 5 – ATENDIMENTO ONLINE
 
 BASE_CONHECIMENTO = CONTEUDO_DOCX + "\n\n" + CONTEUDO_PDF
 
-# ─── Equipe do projeto — EDITE AQUI ──────────────────────────────────────────
+# ─── Equipe do projeto ────────────────────────────────────────────────────────
 ORIENTADORA  = "Prof.ª Rosa Virgínia da Silva Oliveira"
 DISCIPLINA   = "Marketing Jurídico e Posicionamento Digital"
 SEMESTRE     = "4º Semestre – 2026.1"
@@ -147,106 +147,402 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# ─── CSS ──────────────────────────────────────────────────────────────────────
+# ─── CSS com animações profissionais ─────────────────────────────────────────
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-    html, body, .stApp {
-        font-family: 'Inter', sans-serif !important;
-        background-color: #f0f4ff !important;
+    /* ── Variáveis ── */
+    :root {
+        --azul:       #1B3A8C;
+        --azul-escuro:#0d2260;
+        --azul-medio: #2a4fa8;
+        --dourado:    #C8A030;
+        --dourado-claro: #e8bc4a;
+        --fundo:      #f0f4ff;
+        --branco:     #ffffff;
+        --texto:      #1a1a2e;
+        --cinza-suave:#8a96b8;
     }
 
+    /* ── Reset & Base ── */
+    html, body, .stApp {
+        font-family: 'DM Sans', sans-serif !important;
+        background: var(--fundo) !important;
+    }
+
+    /* ── Keyframes ── */
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-28px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulseGlow {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(200,160,48,0); }
+        50%       { box-shadow: 0 0 18px 4px rgba(200,160,48,0.35); }
+    }
+    @keyframes shimmer {
+        0%   { background-position: -400px 0; }
+        100% { background-position: 400px 0; }
+    }
+    @keyframes rotateBadge {
+        from { transform: rotate(0deg); }
+        to   { transform: rotate(360deg); }
+    }
+    @keyframes borderPulse {
+        0%, 100% { border-color: var(--dourado); }
+        50%       { border-color: var(--dourado-claro); }
+    }
+    @keyframes scanline {
+        0%   { top: -8px; }
+        100% { top: 100%; }
+    }
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.3; }
+    }
+    @keyframes floatOrb {
+        0%, 100% { transform: translateY(0px) scale(1); }
+        50%       { transform: translateY(-12px) scale(1.04); }
+    }
+    @keyframes staggerIn {
+        from { opacity: 0; transform: translateY(16px) scale(0.96); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes goldLine {
+        from { width: 0; }
+        to   { width: 100%; }
+    }
+    @keyframes emergencyPulse {
+        0%, 100% { transform: scale(1); box-shadow: 0 2px 12px rgba(183,28,28,0.35); }
+        50%       { transform: scale(1.008); box-shadow: 0 4px 28px rgba(183,28,28,0.55); }
+    }
+
+    /* ── Header ── */
     .header-bar {
-        background: linear-gradient(135deg, #1B3A8C 0%, #0d2260 100%);
-        border-radius: 16px;
-        padding: 18px 24px;
+        background: linear-gradient(135deg, var(--azul) 0%, var(--azul-escuro) 100%);
+        border-radius: 20px;
+        padding: 20px 28px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 1.1rem;
-        box-shadow: 0 4px 20px rgba(27,58,140,0.3);
+        margin-bottom: 1.2rem;
+        box-shadow: 0 8px 32px rgba(13,34,96,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+        animation: fadeInDown 0.7s cubic-bezier(.22,1,.36,1) both;
+        position: relative;
+        overflow: hidden;
     }
-    .header-title { color: #ffffff; font-size: 1.35rem; font-weight: 700; margin: 0; }
-    .header-sub   { color: #C8A030; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; margin-top: 3px; }
-    .logo-img     { height: 54px; object-fit: contain; border-radius: 6px; background: #fff; padding: 4px; }
 
-    .aviso-emergencia {
-        background: linear-gradient(90deg, #7b0000 0%, #b71c1c 100%);
+    /* Linha dourada animada na base do header */
+    .header-bar::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--dourado), transparent);
+        animation: goldLine 1.2s ease 0.5s both;
+    }
+
+    /* Scanline sutil */
+    .header-bar::before {
+        content: '';
+        position: absolute;
+        left: 0; right: 0;
+        height: 1px;
+        background: rgba(200,160,48,0.15);
+        animation: scanline 4s linear infinite;
+        pointer-events: none;
+    }
+
+    /* Orbe decorativo atrás do header */
+    .header-orb {
+        position: absolute;
+        width: 180px; height: 180px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(200,160,48,0.12) 0%, transparent 70%);
+        top: -60px; right: -40px;
+        animation: floatOrb 5s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .header-title {
+        font-family: 'Playfair Display', serif !important;
+        color: var(--branco);
+        font-size: 1.5rem;
+        font-weight: 900;
+        margin: 0;
+        letter-spacing: -0.01em;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .header-sub {
+        color: var(--dourado);
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        margin-top: 4px;
+        text-transform: uppercase;
+    }
+    .logo-img {
+        height: 54px;
+        object-fit: contain;
         border-radius: 10px;
-        padding: 11px 18px;
-        margin-bottom: 0.9rem;
+        background: rgba(255,255,255,0.95);
+        padding: 5px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .logo-img:hover {
+        transform: scale(1.06) rotate(-1deg);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+
+    /* ── Aviso Emergência ── */
+    .aviso-emergencia {
+        background: linear-gradient(90deg, #6d0000 0%, #b71c1c 50%, #6d0000 100%);
+        background-size: 200% auto;
+        border-radius: 12px;
+        padding: 13px 20px;
+        margin-bottom: 1rem;
         color: #fff;
-        font-size: 0.88rem;
+        font-size: 0.87rem;
         font-weight: 700;
         text-align: center;
-        box-shadow: 0 2px 12px rgba(183,28,28,0.35);
-        letter-spacing: 0.02em;
+        animation:
+            fadeInDown 0.7s cubic-bezier(.22,1,.36,1) 0.15s both,
+            emergencyPulse 3s ease-in-out infinite;
+        letter-spacing: 0.03em;
+        border: 1px solid rgba(255,100,100,0.25);
+        position: relative;
+        overflow: hidden;
+    }
+    .aviso-emergencia::before {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+        animation: shimmer 2.5s linear infinite;
     }
 
+    /* ── Subtítulo ── */
     .subtitulo {
         text-align: center;
-        color: #1B3A8C;
-        font-size: 0.91rem;
+        color: var(--azul);
+        font-size: 0.9rem;
         margin-bottom: 1rem;
-        line-height: 1.7;
-        background: #e8eeff;
-        border-radius: 10px;
-        padding: 12px 20px;
-        border-left: 4px solid #C8A030;
+        line-height: 1.75;
+        background: linear-gradient(135deg, #e8eeff 0%, #dde6ff 100%);
+        border-radius: 14px;
+        padding: 14px 22px;
+        border-left: 4px solid var(--dourado);
+        animation: fadeInUp 0.7s cubic-bezier(.22,1,.36,1) 0.3s both;
+        box-shadow: 0 2px 16px rgba(27,58,140,0.08);
+        position: relative;
+        overflow: hidden;
+    }
+    .subtitulo::after {
+        content: '§';
+        position: absolute;
+        right: 18px; top: 50%;
+        transform: translateY(-50%);
+        font-size: 3.5rem;
+        color: rgba(27,58,140,0.05);
+        font-family: 'Playfair Display', serif;
+        pointer-events: none;
     }
 
+    /* ── Card da Equipe ── */
     .card-equipe {
-        background: #ffffff;
-        border-radius: 14px;
-        padding: 18px 22px;
-        border: 1px solid #dde3f5;
-        box-shadow: 0 2px 12px rgba(27,58,140,0.08);
-        margin-bottom: 1rem;
+        background: var(--branco);
+        border-radius: 18px;
+        padding: 20px 24px;
+        border: 1px solid rgba(27,58,140,0.1);
+        box-shadow:
+            0 4px 20px rgba(27,58,140,0.08),
+            0 1px 0 rgba(200,160,48,0.2) inset;
+        margin-bottom: 1.1rem;
+        animation: fadeInUp 0.7s cubic-bezier(.22,1,.36,1) 0.45s both;
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .card-equipe:hover {
+        box-shadow: 0 8px 36px rgba(27,58,140,0.14);
+        transform: translateY(-2px);
     }
     .card-equipe h4 {
-        color: #1B3A8C;
-        font-size: 0.92rem;
+        font-family: 'Playfair Display', serif !important;
+        color: var(--azul);
+        font-size: 1rem;
         font-weight: 700;
-        margin: 0 0 8px 0;
-        padding-bottom: 6px;
-        border-bottom: 2px solid #C8A030;
+        margin: 0 0 10px 0;
+        padding-bottom: 8px;
+        border-bottom: 2px solid var(--dourado);
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
-    .card-equipe .meta { color: #555; font-size: 0.8rem; margin-bottom: 6px; }
+    .card-equipe .meta {
+        color: #556;
+        font-size: 0.8rem;
+        margin-bottom: 6px;
+        font-weight: 400;
+    }
+
+    /* ── Badges ── */
     .badge {
         display: inline-block;
-        background: #eef1fb;
-        color: #1B3A8C;
-        font-size: 0.78rem;
+        background: linear-gradient(135deg, #eef1fb 0%, #e4e9f8 100%);
+        color: var(--azul);
+        font-size: 0.75rem;
         font-weight: 600;
-        border-radius: 20px;
-        padding: 4px 12px;
+        border-radius: 30px;
+        padding: 5px 13px;
         margin: 3px 3px 0 0;
-        border: 1px solid #c5cef5;
+        border: 1px solid rgba(27,58,140,0.15);
+        transition: all 0.25s ease;
+        cursor: default;
+        animation: staggerIn 0.5s ease both;
+    }
+    .badge:hover {
+        background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%);
+        color: var(--branco);
+        border-color: var(--azul);
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 0 4px 14px rgba(27,58,140,0.25);
+    }
+    .badge-lider {
+        background: linear-gradient(135deg, var(--dourado) 0%, #a07820 100%);
+        color: #fff;
+        border-color: var(--dourado);
+        box-shadow: 0 2px 10px rgba(200,160,48,0.3);
+        animation: pulseGlow 3s ease-in-out infinite;
+    }
+    .badge-lider:hover {
+        background: linear-gradient(135deg, var(--dourado-claro) 0%, var(--dourado) 100%);
+        color: #fff;
+        border-color: var(--dourado-claro);
+    }
+    .badge-vice {
+        background: linear-gradient(135deg, #2a4fa8 0%, var(--azul) 100%);
+        color: #fff;
+        border-color: var(--azul-medio);
+        box-shadow: 0 2px 10px rgba(27,58,140,0.25);
+    }
+    .badge-vice:hover {
+        background: linear-gradient(135deg, var(--azul-medio) 0%, var(--azul-escuro) 100%);
+        color: #fff;
     }
 
-    [data-testid="stChatMessageContent"] { border-radius: 12px !important; }
+    /* Delay escalonado nos badges */
+    .badge:nth-child(1)  { animation-delay: 0.05s; }
+    .badge:nth-child(2)  { animation-delay: 0.10s; }
+    .badge:nth-child(3)  { animation-delay: 0.15s; }
+    .badge:nth-child(4)  { animation-delay: 0.20s; }
+    .badge:nth-child(5)  { animation-delay: 0.25s; }
+    .badge:nth-child(6)  { animation-delay: 0.30s; }
+    .badge:nth-child(7)  { animation-delay: 0.35s; }
+    .badge:nth-child(8)  { animation-delay: 0.40s; }
+    .badge:nth-child(9)  { animation-delay: 0.45s; }
+    .badge:nth-child(10) { animation-delay: 0.50s; }
+    .badge:nth-child(11) { animation-delay: 0.55s; }
 
+    /* ── Chat ── */
+    [data-testid="stChatMessageContent"] {
+        border-radius: 14px !important;
+        animation: fadeInUp 0.4s ease both;
+    }
+    [data-testid="stChatMessage"] {
+        animation: fadeInUp 0.4s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    /* ── Input do chat ── */
+    [data-testid="stChatInput"] {
+        border-radius: 16px !important;
+        border: 2px solid rgba(27,58,140,0.2) !important;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+    }
+    [data-testid="stChatInput"]:focus-within {
+        border-color: var(--azul) !important;
+        box-shadow: 0 0 0 3px rgba(27,58,140,0.1) !important;
+    }
+
+    /* ── Rodapé ── */
     .rodape {
         text-align: center;
-        color: #8a96b8;
+        color: var(--cinza-suave);
         font-size: 0.71rem;
         margin-top: 1.5rem;
         padding-top: 1rem;
-        border-top: 1px solid #dde3f5;
+        border-top: 1px solid rgba(27,58,140,0.1);
+        animation: fadeInUp 0.6s ease 0.6s both;
+        position: relative;
+    }
+    .rodape::before {
+        content: '';
+        display: block;
+        width: 40px;
+        height: 2px;
+        background: var(--dourado);
+        margin: 0 auto 10px;
+        border-radius: 2px;
     }
 
+    /* ── Sidebar ── */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #1B3A8C 0%, #0d2260 100%) !important;
+        background: linear-gradient(180deg, var(--azul) 0%, var(--azul-escuro) 100%) !important;
+        border-right: 1px solid rgba(200,160,48,0.15) !important;
     }
-    section[data-testid="stSidebar"] * { color: #e8eeff !important; }
-    section[data-testid="stSidebar"] .stButton>button {
-        background: #C8A030 !important;
-        color: #1B3A8C !important;
-        border-radius: 8px !important;
+    section[data-testid="stSidebar"] * {
+        color: #e8eeff !important;
+    }
+    section[data-testid="stSidebar"] .stButton > button {
+        background: linear-gradient(135deg, var(--dourado) 0%, #a07820 100%) !important;
+        color: var(--azul-escuro) !important;
+        border-radius: 10px !important;
         font-weight: 700 !important;
         border: none !important;
         width: 100%;
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        box-shadow: 0 3px 12px rgba(200,160,48,0.3) !important;
+    }
+    section[data-testid="stSidebar"] .stButton > button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(200,160,48,0.45) !important;
+    }
+
+    /* Itens de integrante na sidebar */
+    .sidebar-member {
+        background: rgba(255,255,255,0.07);
+        border-left: 3px solid var(--dourado);
+        border-radius: 0 8px 8px 0;
+        padding: 6px 12px;
+        margin-bottom: 5px;
+        font-size: 0.8rem;
+        color: #e8eeff;
+        transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+        animation: slideInLeft 0.4s ease both;
+    }
+    .sidebar-member:hover {
+        background: rgba(255,255,255,0.13);
+        border-color: var(--dourado-claro);
+        transform: translateX(3px);
+    }
+
+    /* Spinner customizado */
+    .stSpinner > div {
+        border-top-color: var(--dourado) !important;
+    }
+
+    /* Selectbox */
+    [data-testid="stSelectbox"] > div {
+        border-radius: 10px !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -258,10 +554,11 @@ b64_uni = img_to_b64(os.path.join(ASSETS, "logo_uniftc.jpeg"))
 
 st.markdown(f"""
 <div class="header-bar">
+    <div class="header-orb"></div>
     <img src="data:image/jpeg;base64,{b64_jus}" class="logo-img" alt="JusConnect">
-    <div style="text-align:center; flex:1; padding: 0 14px;">
+    <div style="text-align:center; flex:1; padding: 0 16px; position:relative; z-index:1;">
         <div class="header-title">⚖️ JusConnect</div>
-        <div class="header-sub">INFORMAÇÕES JURÍDICAS · CANAIS DE ATENDIMENTO · SALVADOR/BA</div>
+        <div class="header-sub">Informações Jurídicas · Canais de Atendimento · Salvador/BA</div>
     </div>
     <img src="data:image/jpeg;base64,{b64_uni}" class="logo-img" alt="UNIFTC">
 </div>
@@ -284,14 +581,22 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ─── Card da equipe ───────────────────────────────────────────────────────────
-badges = "".join(f'<span class="badge">👩‍⚖️ {n}</span>' for n in INTEGRANTES)
+def render_badge(nome: str) -> str:
+    if "Líder)" in nome and "Vice" not in nome:
+        return f'<span class="badge badge-lider">👑 {nome}</span>'
+    elif "Vice-líder" in nome:
+        return f'<span class="badge badge-vice">⭐ {nome}</span>'
+    else:
+        return f'<span class="badge">👩‍⚖️ {nome}</span>'
+
+badges = "".join(render_badge(n) for n in INTEGRANTES)
 
 st.markdown(f"""
 <div class="card-equipe">
     <h4>👩‍🎓 Equipe do Projeto</h4>
     <div class="meta">🏛️ <strong>{CURSO}</strong> &nbsp;·&nbsp; 📚 {DISCIPLINA} &nbsp;·&nbsp; 📅 {SEMESTRE}</div>
     <div class="meta">🎓 Orientação: <strong>{ORIENTADORA}</strong></div>
-    <div style="margin-top:8px;">{badges}</div>
+    <div style="margin-top:10px;">{badges}</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -299,13 +604,12 @@ st.markdown(f"""
 groq_api_key = st.secrets.get("GROQ_API_KEY")
 
 with st.sidebar:
-    # Logos lado a lado
     st.markdown(f"""
     <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:12px;">
-        <img src="data:image/jpeg;base64,{b64_jus}" style="height:44px; object-fit:contain; border-radius:6px; background:#fff; padding:3px;">
-        <img src="data:image/jpeg;base64,{b64_uni}" style="height:44px; object-fit:contain; border-radius:6px; background:#fff; padding:3px;">
+        <img src="data:image/jpeg;base64,{b64_jus}" style="height:44px; object-fit:contain; border-radius:8px; background:#fff; padding:3px; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+        <img src="data:image/jpeg;base64,{b64_uni}" style="height:44px; object-fit:contain; border-radius:8px; background:#fff; padding:3px; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
     </div>
-    <div style="text-align:center; color:#C8A030; font-size:0.75rem; font-weight:700; letter-spacing:0.06em; margin-bottom:4px;">
+    <div style="text-align:center; color:#C8A030; font-size:0.75rem; font-weight:700; letter-spacing:0.08em; margin-bottom:3px;">
         JUSCONNECT · UNIFTC
     </div>
     <div style="text-align:center; color:#a0b0e0; font-size:0.72rem; margin-bottom:14px;">
@@ -315,36 +619,30 @@ with st.sidebar:
 
     st.divider()
 
-    # Equipe
     st.markdown(f"""
-    <div style="font-size:0.78rem; color:#C8A030; font-weight:700; margin-bottom:6px; letter-spacing:0.05em;">
-        🎓 ORIENTAÇÃO
+    <div style="font-size:0.72rem; color:#C8A030; font-weight:700; margin-bottom:5px; letter-spacing:0.07em; text-transform:uppercase;">
+        🎓 Orientação
     </div>
-    <div style="font-size:0.8rem; color:#e8eeff; margin-bottom:12px;">
+    <div style="font-size:0.8rem; color:#e8eeff; margin-bottom:12px; padding-left:4px;">
         {ORIENTADORA}
     </div>
-    <div style="font-size:0.78rem; color:#C8A030; font-weight:700; margin-bottom:6px; letter-spacing:0.05em;">
-        📚 DISCIPLINA
+    <div style="font-size:0.72rem; color:#C8A030; font-weight:700; margin-bottom:5px; letter-spacing:0.07em; text-transform:uppercase;">
+        📚 Disciplina
     </div>
-    <div style="font-size:0.8rem; color:#e8eeff; margin-bottom:12px;">
+    <div style="font-size:0.8rem; color:#e8eeff; margin-bottom:12px; padding-left:4px;">
         {DISCIPLINA}
     </div>
-    <div style="font-size:0.78rem; color:#C8A030; font-weight:700; margin-bottom:8px; letter-spacing:0.05em;">
-        👩‍⚖️ INTEGRANTES
+    <div style="font-size:0.72rem; color:#C8A030; font-weight:700; margin-bottom:8px; letter-spacing:0.07em; text-transform:uppercase;">
+        👩‍⚖️ Integrantes
     </div>
     """, unsafe_allow_html=True)
 
-    for nome in INTEGRANTES:
+    for i, nome in enumerate(INTEGRANTES):
+        delay = f"animation-delay:{i * 0.05:.2f}s"
         st.markdown(f"""
-        <div style="
-            background: rgba(255,255,255,0.08);
-            border-left: 3px solid #C8A030;
-            border-radius: 0 6px 6px 0;
-            padding: 5px 10px;
-            margin-bottom: 5px;
-            font-size: 0.8rem;
-            color: #e8eeff;
-        ">{nome}</div>
+        <div class="sidebar-member" style="{delay}">
+            {nome}
+        </div>
         """, unsafe_allow_html=True)
 
     st.divider()
@@ -386,7 +684,7 @@ for msg in st.session_state.messages:
 if prompt := st.chat_input("Digite sua pergunta aqui..."):
 
     if not groq_api_key:
-        st.error("⚠️ GROQ_API_KEY não encontrada. Verifique o arquivo .env.")
+        st.error("⚠️ GROQ_API_KEY não encontrada. Configure em .streamlit/secrets.toml")
         st.stop()
 
     st.session_state.messages.append({"role": "user", "content": prompt})
