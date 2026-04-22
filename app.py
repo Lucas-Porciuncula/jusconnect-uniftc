@@ -1,6 +1,7 @@
 import os
 import base64
 import streamlit as st
+import streamlit.components.v1 as components
 from groq import Groq
 from dotenv import load_dotenv
 
@@ -157,12 +158,14 @@ st.markdown("""
         --azul:       #1B3A8C;
         --azul-escuro:#0d2260;
         --azul-medio: #2a4fa8;
-        --dourado:    #C8A030;
-        --dourado-claro: #e8bc4a;
-        --fundo:      #f0f4ff;
+        --dourado:    #c09e46; /* Softer gold */
+        --dourado-claro: #d1b569;
+        --fundo:      #FAFAF8; /* Warm off-white */
         --branco:     #ffffff;
         --texto:      #1a1a2e;
         --cinza-suave:#8a96b8;
+        --teal-prot:  #2E8B82; /* Psicologia: proteção e cura */
+        --lilac-suave:#5D5A88; /* Psicologia: calma e acolhimento */
     }
 
     /* ── Reset & Base ── */
@@ -185,32 +188,12 @@ st.markdown("""
         to   { opacity: 1; transform: translateX(0); }
     }
     @keyframes pulseGlow {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(200,160,48,0); }
-        50%       { box-shadow: 0 0 18px 4px rgba(200,160,48,0.35); }
+        0%, 100% { box-shadow: 0 0 0 0 rgba(192,158,70,0); }
+        50%       { box-shadow: 0 0 18px 4px rgba(192,158,70,0.25); }
     }
     @keyframes shimmer {
         0%   { background-position: -400px 0; }
         100% { background-position: 400px 0; }
-    }
-    @keyframes rotateBadge {
-        from { transform: rotate(0deg); }
-        to   { transform: rotate(360deg); }
-    }
-    @keyframes borderPulse {
-        0%, 100% { border-color: var(--dourado); }
-        50%       { border-color: var(--dourado-claro); }
-    }
-    @keyframes scanline {
-        0%   { top: -8px; }
-        100% { top: 100%; }
-    }
-    @keyframes blink {
-        0%, 100% { opacity: 1; }
-        50%       { opacity: 0.3; }
-    }
-    @keyframes floatOrb {
-        0%, 100% { transform: translateY(0px) scale(1); }
-        50%       { transform: translateY(-12px) scale(1.04); }
     }
     @keyframes staggerIn {
         from { opacity: 0; transform: translateY(16px) scale(0.96); }
@@ -220,21 +203,23 @@ st.markdown("""
         from { width: 0; }
         to   { width: 100%; }
     }
-    @keyframes emergencyPulse {
-        0%, 100% { transform: scale(1); box-shadow: 0 2px 12px rgba(183,28,28,0.35); }
-        50%       { transform: scale(1.008); box-shadow: 0 4px 28px rgba(183,28,28,0.55); }
+    /* Animação Respiratória de UX: Mimetiza 4-5 segundos de ciclo de respiração calmo */
+    @keyframes calmBreathe {
+        0% { transform: scale(1) translateY(0); box-shadow: 0 4px 15px rgba(27,58,140,0.02); }
+        50% { transform: scale(1.006) translateY(-2px); box-shadow: 0 12px 25px rgba(27,58,140,0.06); }
+        100% { transform: scale(1) translateY(0); box-shadow: 0 4px 15px rgba(27,58,140,0.02); }
     }
 
     /* ── Header ── */
     .header-bar {
         background: linear-gradient(135deg, var(--azul) 0%, var(--azul-escuro) 100%);
-        border-radius: 20px;
+        border-radius: 24px;
         padding: 20px 28px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 1.2rem;
-        box-shadow: 0 8px 32px rgba(13,34,96,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 40px rgba(27,58,140,0.05), inset 0 1px 0 rgba(255,255,255,0.08);
         animation: fadeInDown 0.7s cubic-bezier(.22,1,.36,1) both;
         position: relative;
         overflow: hidden;
@@ -248,28 +233,6 @@ st.markdown("""
         height: 3px;
         background: linear-gradient(90deg, transparent, var(--dourado), transparent);
         animation: goldLine 1.2s ease 0.5s both;
-    }
-
-    /* Scanline sutil */
-    .header-bar::before {
-        content: '';
-        position: absolute;
-        left: 0; right: 0;
-        height: 1px;
-        background: rgba(200,160,48,0.15);
-        animation: scanline 4s linear infinite;
-        pointer-events: none;
-    }
-
-    /* Orbe decorativo atrás do header */
-    .header-orb {
-        position: absolute;
-        width: 180px; height: 180px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(200,160,48,0.12) 0%, transparent 70%);
-        top: -60px; right: -40px;
-        animation: floatOrb 5s ease-in-out infinite;
-        pointer-events: none;
     }
 
     .header-title {
@@ -288,109 +251,115 @@ st.markdown("""
         letter-spacing: 0.1em;
         margin-top: 4px;
         text-transform: uppercase;
+        font-family: 'DM Sans', sans-serif !important;
     }
     .logo-img {
         height: 54px;
         object-fit: contain;
-        border-radius: 10px;
+        border-radius: 12px;
         background: rgba(255,255,255,0.95);
         padding: 5px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+        transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s;
     }
     .logo-img:hover {
-        transform: scale(1.06) rotate(-1deg);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        transform: scale(1.04) rotate(-1deg);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
     }
 
-    /* ── Aviso Emergência ── */
+    /* ── Aviso Emergência (Pílula Proteção) ── */
     .aviso-emergencia {
-        background: linear-gradient(90deg, #6d0000 0%, #b71c1c 50%, #6d0000 100%);
-        background-size: 200% auto;
-        border-radius: 12px;
-        padding: 13px 20px;
-        margin-bottom: 1rem;
+        background: var(--lilac-suave);
+        border-radius: 30px;
+        padding: 12px 24px;
+        margin: -0.5rem auto 1.8rem auto;
         color: #fff;
-        font-size: 0.87rem;
-        font-weight: 700;
+        font-size: 0.85rem;
+        font-weight: 600;
         text-align: center;
-        animation:
-            fadeInDown 0.7s cubic-bezier(.22,1,.36,1) 0.15s both,
-            emergencyPulse 3s ease-in-out infinite;
-        letter-spacing: 0.03em;
-        border: 1px solid rgba(255,100,100,0.25);
+        max-width: 250px;
+        cursor: default;
+        animation: fadeInDown 0.7s cubic-bezier(.22,1,.36,1) 0.15s both;
+        letter-spacing: 0.02em;
+        box-shadow: 0 8px 24px rgba(93, 90, 136, 0.2);
         position: relative;
         overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        white-space: nowrap;
     }
-    .aviso-emergencia::before {
-        content: '';
-        position: absolute;
-        top: 0; left: -100%;
-        width: 60%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-        animation: shimmer 2.5s linear infinite;
+    
+    .aviso-emergencia .texto-oculto {
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 0;
+    }
+
+    .aviso-emergencia:hover {
+        max-width: 480px;
+        background: var(--teal-prot);
+        box-shadow: 0 12px 30px rgba(46, 139, 130, 0.3);
+    }
+    
+    .aviso-emergencia:hover .texto-oculto {
+        max-width: 300px;
+        opacity: 1;
+        margin-left: 10px;
     }
 
     /* ── Subtítulo ── */
     .subtitulo {
         text-align: center;
         color: var(--azul);
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
-        line-height: 1.75;
-        background: linear-gradient(135deg, #e8eeff 0%, #dde6ff 100%);
-        border-radius: 14px;
-        padding: 14px 22px;
-        border-left: 4px solid var(--dourado);
-        animation: fadeInUp 0.7s cubic-bezier(.22,1,.36,1) 0.3s both;
-        box-shadow: 0 2px 16px rgba(27,58,140,0.08);
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.8;
+        background: #fff;
+        border-radius: 20px;
+        padding: 18px 26px;
+        border-left: 6px solid var(--dourado);
+        animation: fadeInUp 0.7s cubic-bezier(.22,1,.36,1) 0.3s both, calmBreathe 6s ease-in-out infinite;
+        box-shadow: 0 10px 30px rgba(27,58,140,0.04);
         position: relative;
         overflow: hidden;
-    }
-    .subtitulo::after {
-        content: '§';
-        position: absolute;
-        right: 18px; top: 50%;
-        transform: translateY(-50%);
-        font-size: 3.5rem;
-        color: rgba(27,58,140,0.05);
-        font-family: 'Playfair Display', serif;
-        pointer-events: none;
     }
 
     /* ── Card da Equipe ── */
     .card-equipe {
         background: var(--branco);
-        border-radius: 18px;
-        padding: 20px 24px;
-        border: 1px solid rgba(27,58,140,0.1);
-        box-shadow:
-            0 4px 20px rgba(27,58,140,0.08),
-            0 1px 0 rgba(200,160,48,0.2) inset;
-        margin-bottom: 1.1rem;
+        border-radius: 24px;
+        padding: 24px 28px;
+        border: 1px solid rgba(27,58,140,0.05);
+        box-shadow: 0 10px 40px rgba(27,58,140,0.05);
+        margin-bottom: 1.5rem;
         animation: fadeInUp 0.7s cubic-bezier(.22,1,.36,1) 0.45s both;
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        transition: box-shadow 0.4s ease, transform 0.4s ease;
     }
     .card-equipe:hover {
-        box-shadow: 0 8px 36px rgba(27,58,140,0.14);
+        box-shadow: 0 16px 45px rgba(27,58,140,0.08);
         transform: translateY(-2px);
     }
     .card-equipe h4 {
-        font-family: 'Playfair Display', serif !important;
+        font-family: 'DM Sans', sans-serif !important;
         color: var(--azul);
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-weight: 700;
-        margin: 0 0 10px 0;
+        margin: 0 0 12px 0;
         padding-bottom: 8px;
-        border-bottom: 2px solid var(--dourado);
+        border-bottom: 2px solid rgba(192,158,70, 0.3);
         display: flex;
         align-items: center;
         gap: 8px;
     }
     .card-equipe .meta {
-        color: #556;
-        font-size: 0.8rem;
+        color: #667;
+        font-size: 0.85rem;
         margin-bottom: 6px;
         font-weight: 400;
     }
@@ -398,46 +367,41 @@ st.markdown("""
     /* ── Badges ── */
     .badge {
         display: inline-block;
-        background: linear-gradient(135deg, #eef1fb 0%, #e4e9f8 100%);
+        background: #f4f6fa;
         color: var(--azul);
         font-size: 0.75rem;
         font-weight: 600;
         border-radius: 30px;
-        padding: 5px 13px;
-        margin: 3px 3px 0 0;
-        border: 1px solid rgba(27,58,140,0.15);
-        transition: all 0.25s ease;
+        padding: 6px 14px;
+        margin: 4px 4px 0 0;
+        border: 1px solid rgba(27,58,140,0.08);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         cursor: default;
         animation: staggerIn 0.5s ease both;
     }
     .badge:hover {
-        background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%);
+        background: var(--azul-medio);
         color: var(--branco);
         border-color: var(--azul);
-        transform: translateY(-2px) scale(1.04);
-        box-shadow: 0 4px 14px rgba(27,58,140,0.25);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 16px rgba(27,58,140,0.15);
     }
     .badge-lider {
-        background: linear-gradient(135deg, var(--dourado) 0%, #a07820 100%);
-        color: #fff;
-        border-color: var(--dourado);
-        box-shadow: 0 2px 10px rgba(200,160,48,0.3);
-        animation: pulseGlow 3s ease-in-out infinite;
-    }
-    .badge-lider:hover {
-        background: linear-gradient(135deg, var(--dourado-claro) 0%, var(--dourado) 100%);
+        background: var(--dourado);
         color: #fff;
         border-color: var(--dourado-claro);
+        box-shadow: 0 2px 10px rgba(192,158,70,0.2);
+    }
+    .badge-lider:hover {
+        background: var(--dourado-claro);
     }
     .badge-vice {
-        background: linear-gradient(135deg, #2a4fa8 0%, var(--azul) 100%);
+        background: var(--azul-medio);
         color: #fff;
-        border-color: var(--azul-medio);
-        box-shadow: 0 2px 10px rgba(27,58,140,0.25);
+        border-color: #3b5cbd;
     }
     .badge-vice:hover {
-        background: linear-gradient(135deg, var(--azul-medio) 0%, var(--azul-escuro) 100%);
-        color: #fff;
+        background: var(--azul);
     }
 
     /* Delay escalonado nos badges */
@@ -455,8 +419,9 @@ st.markdown("""
 
     /* ── Chat ── */
     [data-testid="stChatMessageContent"] {
-        border-radius: 14px !important;
+        border-radius: 18px !important;
         animation: fadeInUp 0.4s ease both;
+        box-shadow: 0 4px 15px rgba(27,58,140,0.02);
     }
     [data-testid="stChatMessage"] {
         animation: fadeInUp 0.4s cubic-bezier(.22,1,.36,1) both;
@@ -464,25 +429,25 @@ st.markdown("""
 
     /* ── Input do chat ── */
     [data-testid="stChatInput"] {
-        border-radius: 16px !important;
-        border: 2px solid rgba(27,58,140,0.2) !important;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+        border-radius: 20px !important;
+        border: 1px solid rgba(27,58,140,0.1) !important;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        box-shadow: 0 4px 15px rgba(27,58,140,0.02) !important;
     }
     [data-testid="stChatInput"]:focus-within {
         border-color: var(--azul) !important;
-        box-shadow: 0 0 0 3px rgba(27,58,140,0.1) !important;
+        box-shadow: 0 8px 25px rgba(27,58,140,0.08) !important;
     }
 
     /* ── Rodapé ── */
     .rodape {
         text-align: center;
         color: var(--cinza-suave);
-        font-size: 0.71rem;
-        margin-top: 1.5rem;
-        padding-top: 1rem;
-        border-top: 1px solid rgba(27,58,140,0.1);
+        font-size: 0.75rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(27,58,140,0.05);
         animation: fadeInUp 0.6s ease 0.6s both;
-        position: relative;
     }
     .rodape::before {
         content: '';
@@ -497,42 +462,42 @@ st.markdown("""
     /* ── Sidebar ── */
     section[data-testid="stSidebar"] {
         background: linear-gradient(180deg, var(--azul) 0%, var(--azul-escuro) 100%) !important;
-        border-right: 1px solid rgba(200,160,48,0.15) !important;
+        border-right: 1px solid rgba(192,158,70,0.15) !important;
     }
     section[data-testid="stSidebar"] * {
         color: #e8eeff !important;
     }
     section[data-testid="stSidebar"] .stButton > button {
-        background: linear-gradient(135deg, var(--dourado) 0%, #a07820 100%) !important;
-        color: var(--azul-escuro) !important;
-        border-radius: 10px !important;
+        background: var(--teal-prot) !important; /* Psicologia do teal na sidebar também */
+        color: #fff !important;
+        border-radius: 14px !important;
         font-weight: 700 !important;
         border: none !important;
         width: 100%;
-        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-        box-shadow: 0 3px 12px rgba(200,160,48,0.3) !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(46, 139, 130, 0.25) !important;
     }
     section[data-testid="stSidebar"] .stButton > button:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(200,160,48,0.45) !important;
+        box-shadow: 0 8px 20px rgba(46, 139, 130, 0.4) !important;
     }
 
     /* Itens de integrante na sidebar */
     .sidebar-member {
         background: rgba(255,255,255,0.07);
-        border-left: 3px solid var(--dourado);
-        border-radius: 0 8px 8px 0;
-        padding: 6px 12px;
-        margin-bottom: 5px;
-        font-size: 0.8rem;
+        border-left: 4px solid var(--dourado);
+        border-radius: 0 12px 12px 0;
+        padding: 8px 14px;
+        margin-bottom: 8px;
+        font-size: 0.85rem;
         color: #e8eeff;
-        transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         animation: slideInLeft 0.4s ease both;
     }
     .sidebar-member:hover {
-        background: rgba(255,255,255,0.13);
+        background: rgba(255,255,255,0.15);
         border-color: var(--dourado-claro);
-        transform: translateX(3px);
+        transform: translateX(4px);
     }
 
     /* Spinner customizado */
@@ -542,7 +507,8 @@ st.markdown("""
 
     /* Selectbox */
     [data-testid="stSelectbox"] > div {
-        border-radius: 10px !important;
+        border-radius: 14px !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -564,10 +530,13 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# ─── Aviso emergência ─────────────────────────────────────────────────────────
+# ─── Aviso emergência (Dynamic Island) ────────────────────────────────────────
 st.markdown("""
 <div class="aviso-emergencia">
-    🚨 EM PERIGO AGORA? &nbsp;|&nbsp; <strong>190</strong> Polícia &nbsp;·&nbsp; <strong>180</strong> Central da Mulher &nbsp;|&nbsp; 24h · Gratuito · Sigiloso
+    <span>🛡️ Central de Proteção</span>
+    <span class="texto-oculto">
+        &nbsp;|&nbsp; <strong>190</strong> Polícia &nbsp;·&nbsp; <strong>180</strong> Mulher
+    </span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -740,3 +709,47 @@ st.markdown(f"""
     Este serviço é informativo. Em emergências, ligue <strong>190</strong> ou <strong>180</strong>.
 </div>
 """, unsafe_allow_html=True)
+
+# ─── Botão de Saída Rápida (Panic Exit) ───────────────────────────────────────
+botao_saida = """
+<div id="quick-exit-btn" style="position: fixed; bottom: 20px; right: 20px; 
+     background: rgba(0,0,0,0.6); color: #fff; padding: 10px 16px; 
+     border-radius: 30px; font-family: 'DM Sans', sans-serif; font-size: 13px;
+     font-weight: bold; cursor: pointer; backdrop-filter: blur(8px); z-index: 99999;
+     box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: background 0.3s;" 
+     onmouseover="this.style.background='rgba(0,0,0,0.8)'"
+     onmouseout="this.style.background='rgba(0,0,0,0.6)'"
+     onclick="window.parent.location.replace('https://g1.globo.com')">
+     ✖ Saída Rápida (ESC)
+</div>
+
+<script>
+    const docPai = window.parent.document;
+    
+    // Evita duplicar o listener
+    if (!docPai.getElementById('quick-exit-listener')) {
+        const dummy = docPai.createElement('div');
+        dummy.id = 'quick-exit-listener';
+        docPai.body.appendChild(dummy);
+
+        docPai.addEventListener('keydown', function(event) {
+            if(event.key === 'Escape' || event.key === 'Esc') {
+                window.parent.location.replace('https://g1.globo.com'); 
+            }
+        });
+    }
+
+    // Evita botões duplicados a cada reload do Streamlit
+    if (!docPai.getElementById('quick-exit-btn-parent')) {
+        const btn = docPai.createElement('div');
+        btn.innerHTML = document.getElementById('quick-exit-btn').outerHTML;
+        const actualBtn = btn.firstElementChild;
+        actualBtn.id = 'quick-exit-btn-parent';
+        docPai.body.appendChild(actualBtn);
+    }
+    
+    // Oculta o original de dentro do iframe
+    document.getElementById('quick-exit-btn').style.display = 'none';
+</script>
+"""
+components.html(botao_saida, height=0)
